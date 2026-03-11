@@ -312,26 +312,81 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
 
       {question.type === 'group-size' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            {['1', '2', '3', '4', '5-10', '+10'].map((option) => (
-              <button
-                key={option}
-                onClick={() => onChange(option)}
-                className={`relative flex flex-col items-center justify-center w-24 h-24 rounded-2xl border-2 transition-all duration-200 ${
-                  value === option
-                    ? 'bg-gradient-to-br from-rose-400 to-rose-500 border-rose-500 text-white shadow-xl scale-110'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-rose-300 hover:bg-rose-50 hover:scale-105'
-                }`}
+          <div className="flex flex-col items-center justify-center px-8 py-6">
+            {/* Slider track with person icon indicator */}
+            <div className="relative w-full max-w-2xl">
+              {/* Person icon indicator */}
+              <div 
+                className="absolute -top-12 transition-all duration-300 ease-out"
+                style={{ 
+                  left: `${(['1', '2', '3', '4', '5', '6', '7-9', '10+'].indexOf(value as string) / 7) * 100}%`,
+                  transform: 'translateX(-50%)'
+                }}
               >
-                <User className={`w-7 h-7 mb-2 ${value === option ? 'text-white' : 'text-rose-400'}`} />
-                <span className="text-base font-semibold">{option}</span>
-                {value === option && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                    <Check className="w-4 h-4 text-rose-500" />
+                <div className="flex flex-col items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-rose-500 rounded-full flex items-center justify-center shadow-lg">
+                    <User className="w-6 h-6 text-white" />
                   </div>
-                )}
-              </button>
-            ))}
+                </div>
+              </div>
+              
+              {/* Slider input */}
+              <input
+                type="range"
+                min="0"
+                max="7"
+                step="1"
+                value={['1', '2', '3', '4', '5', '6', '7-9', '10+'].indexOf(value as string)}
+                onChange={(e) => {
+                  const options = ['1', '2', '3', '4', '5', '6', '7-9', '10+'];
+                  onChange(options[parseInt(e.target.value)]);
+                }}
+                className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider-thumb"
+                style={{
+                  background: `linear-gradient(to right, #fb7185 0%, #fb7185 ${((['1', '2', '3', '4', '5', '6', '7-9', '10+'].indexOf(value as string) / 7) * 100)}%, #e5e7eb ${((['1', '2', '3', '4', '5', '6', '7-9', '10+'].indexOf(value as string) / 7) * 100)}%, #e5e7eb 100%)`
+                }}
+              />
+              
+              {/* Labels */}
+              <div className="relative w-full mt-6">
+                <div className="flex justify-between items-center">
+                  {['1', '2', '3', '4', '5', '6', '7-9', '10+'].map((option, index) => (
+                    <button
+                      key={option}
+                      onClick={() => onChange(option)}
+                      className="flex flex-col items-center gap-1 min-w-[40px] group"
+                    >
+                      {/* Tick mark */}
+                      <div className={`w-0.5 h-3 rounded-full transition-colors ${
+                        value === option ? 'bg-rose-500' : 'bg-gray-300 group-hover:bg-rose-300'
+                      }`} style={{ marginTop: '-1.25rem' }} />
+                      {/* Label */}
+                      <span className={`text-sm font-medium transition-colors ${
+                        value === option ? 'text-rose-500' : 'text-gray-600 group-hover:text-rose-400'
+                      }`}>
+                        {option}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Custom slider styles */}
+            <style jsx>{`
+              .slider-thumb::-webkit-slider-thumb {
+                appearance: none;
+                width: 0;
+                height: 0;
+              }
+              .slider-thumb::-moz-range-thumb {
+                appearance: none;
+                width: 0;
+                height: 0;
+                border: none;
+                background: transparent;
+              }
+            `}</style>
           </div>
         </div>
       )}
